@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+has_error=0
+
+while read line; do
+	v1=$(cut -f1 <<<"$line")
+	truth=$(cut -f2 <<<"$line")
+	v2=$(cut -f3 <<<"$line")
+	ret=$(./qb "${v1}" "${v2}" | grep -o '[<>=]')
+
+	s="${v1} ${ret} ${v2}..."
+	if [[ $ret = $truth ]]; then
+		echo "$s OK"
+	else
+		echo "$s FAIL ($truth)"
+		has_error=1
+	fi
+done < test_input.txt
+
+exit $has_error
